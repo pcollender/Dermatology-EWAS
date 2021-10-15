@@ -1,0 +1,382 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdftitle={basic EWAS},
+            pdfauthor={Phil Collender},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{basic EWAS}
+\author{Phil Collender}
+\date{October 14, 2021}
+
+\begin{document}
+\maketitle
+
+\subsection{Loading in required
+libraries}\label{loading-in-required-libraries}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(qvalue)}
+\KeywordTok{library}\NormalTok{(EpiDISH)}
+\KeywordTok{library}\NormalTok{(limma)}
+\KeywordTok{library}\NormalTok{(qqman)}
+\KeywordTok{library}\NormalTok{(IlluminaHumanMethylationEPICanno.ilm10b2.hg19)}
+\CommentTok{#library(IlluminaHumanMethylation450kanno.ilmn12.hg19)}
+\KeywordTok{library}\NormalTok{(scales)}
+
+\NormalTok{lambda <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(p) }\KeywordTok{median}\NormalTok{(}\KeywordTok{qchisq}\NormalTok{(p, }\DataTypeTok{df=}\DecValTok{1}\NormalTok{, }\DataTypeTok{lower.tail=}\OtherTok{FALSE}\NormalTok{), }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{qchisq}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\DataTypeTok{df=}\DecValTok{1}\NormalTok{) }
+
+\NormalTok{qqplot <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(pvector, }\DataTypeTok{p0 =} \OperatorTok{-}\DecValTok{8}\NormalTok{, }\DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"#A0A0A0"}\NormalTok{, }\StringTok{"#000000"}\NormalTok{),}\DataTypeTok{showCI =}\NormalTok{ T, ...) \{}
+\NormalTok{  p_order <-}\StringTok{ }\KeywordTok{order}\NormalTok{(pvector,}\DataTypeTok{decreasing=}\OtherTok{FALSE}\NormalTok{)}
+  \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{any}\NormalTok{(pvector }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{)) \{}
+\NormalTok{    pvector[pvector }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{] <-}\StringTok{ }\NormalTok{.Machine}\OperatorTok{$}\NormalTok{double.xmin}
+\NormalTok{  \}}
+\NormalTok{  o <-}\StringTok{ }\OperatorTok{-}\KeywordTok{log10}\NormalTok{(pvector[p_order])}
+\NormalTok{  n <-}\StringTok{ }\KeywordTok{length}\NormalTok{(o)}
+\NormalTok{  e <-}\StringTok{ }\OperatorTok{-}\KeywordTok{log10}\NormalTok{ (( }\DecValTok{1}\OperatorTok{:}\NormalTok{n }\OperatorTok{-}\StringTok{ }\FloatTok{0.5}\NormalTok{)}\OperatorTok{/}\NormalTok{n )}
+\NormalTok{  b <-}\StringTok{ }\NormalTok{o }\OperatorTok{>=}\StringTok{ }\NormalTok{p0;}
+  
+  \KeywordTok{plot}\NormalTok{(e[}\OperatorTok{!}\NormalTok{b],o[}\OperatorTok{!}\NormalTok{b],}\DataTypeTok{pch=}\DecValTok{19}\NormalTok{,}\DataTypeTok{cex=}\FloatTok{0.7}\NormalTok{, ...,}
+       \DataTypeTok{xlab=}\KeywordTok{expression}\NormalTok{(Expected}\OperatorTok{~}\ErrorTok{~}\OperatorTok{-}\NormalTok{log[}\DecValTok{10}\NormalTok{](}\KeywordTok{italic}\NormalTok{(p))),}
+       \DataTypeTok{ylab=}\KeywordTok{expression}\NormalTok{(Observed}\OperatorTok{~}\ErrorTok{~}\OperatorTok{-}\NormalTok{log[}\DecValTok{10}\NormalTok{](}\KeywordTok{italic}\NormalTok{(p))),}
+       \DataTypeTok{xlim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,e[}\DecValTok{1}\NormalTok{]), }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,o[}\DecValTok{1}\NormalTok{]),}\DataTypeTok{col=}\NormalTok{col[}\DecValTok{1}\NormalTok{])}
+\NormalTok{  ## plot the 95% confidence interval (pointwise)}
+  \ControlFlowTok{if}\NormalTok{(showCI)\{}
+\NormalTok{    ## the jth order statistic from a}
+\NormalTok{    ## uniform(0,1) sample}
+\NormalTok{    ## has a beta(j,n-j+1) distribution}
+\NormalTok{    ## (Casella & Berger, 2002,}
+\NormalTok{    ## 2nd edition, pg 230, Duxbury)}
+\NormalTok{    c97.}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{qbeta}\NormalTok{(}\FloatTok{0.975}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\NormalTok{n,n}\OperatorTok{-}\DecValTok{1}\OperatorTok{:}\NormalTok{n}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{    c02.}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{qbeta}\NormalTok{(}\FloatTok{0.025}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\NormalTok{n,n}\OperatorTok{-}\DecValTok{1}\OperatorTok{:}\NormalTok{n}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
+    \KeywordTok{polygon}\NormalTok{(}\KeywordTok{c}\NormalTok{(e, }\KeywordTok{rev}\NormalTok{(e)), }\OperatorTok{-}\KeywordTok{log10}\NormalTok{(}\KeywordTok{c}\NormalTok{(c97.}\DecValTok{5}\NormalTok{, }\KeywordTok{rev}\NormalTok{(c02.}\DecValTok{5}\NormalTok{))), }\DataTypeTok{density=}\OtherTok{NA}\NormalTok{, }\DataTypeTok{col=}\StringTok{"gray90"}\NormalTok{)}
+\NormalTok{  \}}
+  \KeywordTok{points}\NormalTok{(e[b],o[b],}\DataTypeTok{pch=}\DecValTok{19}\NormalTok{,}\DataTypeTok{cex=}\FloatTok{0.7}\NormalTok{,}\DataTypeTok{col=}\NormalTok{col[}\DecValTok{2}\NormalTok{])}
+  \KeywordTok{abline}\NormalTok{(}\DataTypeTok{a=}\DecValTok{0}\NormalTok{,}\DataTypeTok{b=}\DecValTok{1}\NormalTok{,}\DataTypeTok{col=}\KeywordTok{rgb}\NormalTok{(}\DecValTok{1}\NormalTok{,}\FloatTok{0.65}\NormalTok{,}\DecValTok{0}\NormalTok{),}\DataTypeTok{lty=}\DecValTok{1}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{my.legend =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(...) \{}
+\NormalTok{  opar <-}\StringTok{ }\KeywordTok{par}\NormalTok{(}\DataTypeTok{fig=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{),}
+              \DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{), }\DataTypeTok{new=}\OtherTok{TRUE}\NormalTok{)}
+  \KeywordTok{on.exit}\NormalTok{(}\KeywordTok{par}\NormalTok{(opar))}
+  \KeywordTok{plot}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{type=}\StringTok{'n'}\NormalTok{, }\DataTypeTok{bty=}\StringTok{'n'}\NormalTok{, }\DataTypeTok{xaxt=}\StringTok{'n'}\NormalTok{, }\DataTypeTok{yaxt=}\StringTok{'n'}\NormalTok{)}
+  \KeywordTok{legend}\NormalTok{(...)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Load data for results of 7 yr
+analysis}\label{load-data-for-results-of-7-yr-analysis}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{load}\NormalTok{(}\StringTok{'results_files/basic_EWAS_limma.RData'}\NormalTok{)}
+\NormalTok{HSres =}\StringTok{ }\NormalTok{results}
+
+\KeywordTok{rm}\NormalTok{(results); }\KeywordTok{gc}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{mar =} \KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{layout}\NormalTok{(}\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{),}\DataTypeTok{nrow=}\DecValTok{3}\NormalTok{))}
+\CommentTok{#Continuous}
+
+\NormalTok{pval.cols =}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{'pval'}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(HSres), }\DataTypeTok{value =}\NormalTok{ T)}
+
+\ControlFlowTok{for}\NormalTok{(col }\ControlFlowTok{in}\NormalTok{ pval.cols)\{}
+\NormalTok{  lambd=}\KeywordTok{round}\NormalTok{(}\KeywordTok{lambda}\NormalTok{(HSres[,col]),}\DecValTok{2}\NormalTok{)}
+  \KeywordTok{qqplot}\NormalTok{(HSres[,col],}\DataTypeTok{main=}\StringTok{"QQ-plot, Basic EWAS for HS"}\NormalTok{)}
+  \KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{,}\DataTypeTok{legend=}\KeywordTok{eval}\NormalTok{(}\KeywordTok{substitute}\NormalTok{( }\KeywordTok{expression}\NormalTok{(}\KeywordTok{paste}\NormalTok{(lambda,}\StringTok{"="}\NormalTok{,lambd)),}\KeywordTok{list}\NormalTok{(}\DataTypeTok{lambd=}\NormalTok{lambd))),}\DataTypeTok{bty=}\StringTok{"n"}\NormalTok{)}
+  \KeywordTok{hist}\NormalTok{(HSres[,col],}\DataTypeTok{main=}\StringTok{"P-value Histogram, Basic EWAS for HS"}\NormalTok{,}\DataTypeTok{xlab=}\StringTok{"P-value"}\NormalTok{,   }
+  \DataTypeTok{col=}\StringTok{"grey"}\NormalTok{,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Basic_EWAS_files/figure-latex/qqplots and pvlaue histograms-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{colorGradient <-}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"deepskyblue"}\NormalTok{), }\DataTypeTok{alpha=}\NormalTok{F)}
+\KeywordTok{layout}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+
+\NormalTok{pval.cols =}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{'pval'}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(HSres), }\DataTypeTok{value =}\NormalTok{ T)}
+\NormalTok{coef.cols =}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{'coef'}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(HSres), }\DataTypeTok{value =}\NormalTok{ T)}
+
+\NormalTok{pval.matrix =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(HSres[,pval.cols])}
+\NormalTok{coef.matrix =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(HSres[,coef.cols])}
+
+\NormalTok{qval =}\StringTok{ }\KeywordTok{qvalue}\NormalTok{(pval.matrix)}
+
+\NormalTok{log.pvalues<-}\OperatorTok{-}\KeywordTok{log10}\NormalTok{(pval.matrix)}
+
+\NormalTok{colors =}\StringTok{ }\KeywordTok{colorGradient}\NormalTok{(}\DecValTok{30}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{cut}\NormalTok{(log.pvalues,}\DataTypeTok{breaks =} \DecValTok{30}\NormalTok{))]}
+
+\NormalTok{xrg=}\KeywordTok{range}\NormalTok{(coef.matrix)}
+\NormalTok{yrg=}\KeywordTok{range}\NormalTok{(log.pvalues)}
+\NormalTok{ntest=}\KeywordTok{length}\NormalTok{(coef.matrix)}
+
+\NormalTok{qThresh =}\StringTok{ }\KeywordTok{max}\NormalTok{(pval.matrix[qval}\OperatorTok{$}\NormalTok{qvalues}\OperatorTok{<=}\FloatTok{0.05}\NormalTok{])}
+
+\KeywordTok{plot}\NormalTok{(coef.matrix[,}\DecValTok{1}\NormalTok{],log.pvalues[,}\DecValTok{1}\NormalTok{], }\DataTypeTok{col=}\KeywordTok{alpha}\NormalTok{(colors[}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(pval.matrix)],}\FloatTok{0.60}\NormalTok{),}
+     \DataTypeTok{xlim=}\NormalTok{xrg, }\DataTypeTok{ylim=}\NormalTok{yrg, }\DataTypeTok{pch=}\DecValTok{16}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Volcano Plot, Basic EWAS for HS"}\NormalTok{,}
+     \DataTypeTok{xlab=}\KeywordTok{expression}\NormalTok{(}\StringTok{"Reg. Coeff (M-value)"}\OperatorTok{~}\NormalTok{(beta)), }
+     \DataTypeTok{ylab=}\KeywordTok{expression}\NormalTok{(}\StringTok{"-log"}\NormalTok{[}\DecValTok{10}\NormalTok{]}\OperatorTok{~}\StringTok{"(P-value)"}\NormalTok{))}
+\KeywordTok{abline}\NormalTok{(}\DataTypeTok{h=}\OperatorTok{-}\KeywordTok{log10}\NormalTok{(}\FloatTok{0.05}\OperatorTok{/}\NormalTok{ntest), }\DataTypeTok{lty=}\DecValTok{1}\NormalTok{, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\DataTypeTok{h=}\OperatorTok{-}\KeywordTok{log10}\NormalTok{(qThresh), }\DataTypeTok{lty=}\DecValTok{2}\NormalTok{, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
+\KeywordTok{my.legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\StringTok{"Bonferroni"}\NormalTok{, }\StringTok{"FDR"}\NormalTok{), }\DataTypeTok{lty=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+          \DataTypeTok{lwd=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{),}\DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"orange"}\NormalTok{),}
+          \DataTypeTok{horiz=}\OtherTok{FALSE}\NormalTok{, }\DataTypeTok{bty=}\StringTok{'n'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Basic_EWAS_files/figure-latex/volcano plots-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{mar =} \KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+
+\KeywordTok{data}\NormalTok{(IlluminaHumanMethylationEPICanno.ilm10b2.hg19)}
+\NormalTok{IlluminaAnnot.EPIC<-}\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{getAnnotation}\NormalTok{(IlluminaHumanMethylationEPICanno.ilm10b2.hg19))[,}\KeywordTok{c}\NormalTok{(}\StringTok{"Name"}\NormalTok{,}\StringTok{"UCSC_RefGene_Name"}\NormalTok{,}\StringTok{"chr"}\NormalTok{,}\StringTok{"pos"}\NormalTok{,}\StringTok{"Relation_to_Island"}\NormalTok{,}\StringTok{"DMR"}\NormalTok{)]}
+
+\CommentTok{#' Match to your results}
+\NormalTok{IlluminaAnnot.EPIC_ =}\StringTok{ }\NormalTok{IlluminaAnnot.EPIC[}\KeywordTok{match}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{CpG, IlluminaAnnot.EPIC}\OperatorTok{$}\NormalTok{Name),]}
+
+\CommentTok{#' Get annotation for bonferroni and FDR-significant results}
+\NormalTok{pval.cols =}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{'pval'}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(HSres), }\DataTypeTok{value =}\NormalTok{ T)}
+\NormalTok{coef.cols =}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{'coef'}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(HSres), }\DataTypeTok{value =}\NormalTok{ T)}
+
+\NormalTok{pval.matrix =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(HSres[,pval.cols])}
+\NormalTok{coef.matrix =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(HSres[,coef.cols])}
+
+\NormalTok{qval =}\StringTok{ }\KeywordTok{qvalue}\NormalTok{(pval.matrix)}
+
+\NormalTok{HSres}\OperatorTok{$}\NormalTok{coeff =}\StringTok{ }\NormalTok{coef.matrix}
+\NormalTok{HSres}\OperatorTok{$}\NormalTok{pval =}\StringTok{ }\NormalTok{pval.matrix}
+\NormalTok{HSres}\OperatorTok{$}\NormalTok{FDR =}\StringTok{ }\NormalTok{qval}\OperatorTok{$}\NormalTok{qvalues}
+\NormalTok{ntest=}\KeywordTok{length}\NormalTok{(coef.matrix)}
+
+\NormalTok{qThresh =}\StringTok{ }\KeywordTok{max}\NormalTok{(pval.matrix[qval}\OperatorTok{$}\NormalTok{qvalues}\OperatorTok{<=}\FloatTok{0.05}\NormalTok{])}
+
+\CommentTok{#' Only these elements are needed from annotation}
+\NormalTok{HSres}\OperatorTok{$}\NormalTok{annot =}\StringTok{ }\NormalTok{IlluminaAnnot.EPIC_[,}\KeywordTok{c}\NormalTok{(}\StringTok{"Name"}\NormalTok{,}\StringTok{"chr"}\NormalTok{,}\StringTok{"pos"}\NormalTok{)]}
+
+\CommentTok{#Drop sex chromosome results}
+\NormalTok{keeps =}\StringTok{ }\KeywordTok{which}\NormalTok{(}\OperatorTok{!}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{annot}\OperatorTok{$}\NormalTok{chr }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'chrX'}\NormalTok{,}\StringTok{'chrY'}\NormalTok{)))}
+
+\CommentTok{#'  CHR should be numeric}
+\NormalTok{HSres}\OperatorTok{$}\NormalTok{annot}\OperatorTok{$}\NormalTok{CHR =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{sub}\NormalTok{(}\StringTok{'.*chr'}\NormalTok{, }\StringTok{''}\NormalTok{,HSres}\OperatorTok{$}\NormalTok{annot}\OperatorTok{$}\NormalTok{chr))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: NAs introduced by coercion
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Colors}
+\NormalTok{myColors =}\StringTok{ }\KeywordTok{rainbow}\NormalTok{(}\DecValTok{22}\NormalTok{)}
+\KeywordTok{names}\NormalTok{(myColors) =}\StringTok{ }\KeywordTok{levels}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{22}\NormalTok{)}
+\NormalTok{ymax =}\StringTok{ }\KeywordTok{max}\NormalTok{(}\OperatorTok{-}\KeywordTok{log10}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{pval))}
+
+\NormalTok{subdat =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{pvalue =}\NormalTok{ HSres}\OperatorTok{$}\NormalTok{pval[,}\DecValTok{1}\NormalTok{], }\DataTypeTok{CHR =}\NormalTok{ HSres}\OperatorTok{$}\NormalTok{annot}\OperatorTok{$}\NormalTok{CHR,}
+                      \DataTypeTok{pos =}\NormalTok{ HSres}\OperatorTok{$}\NormalTok{annot}\OperatorTok{$}\NormalTok{pos, }\DataTypeTok{Name =}\NormalTok{ HSres}\OperatorTok{$}\NormalTok{annot}\OperatorTok{$}\NormalTok{Name)}
+
+\KeywordTok{manhattan}\NormalTok{(subdat[keeps,], }\DataTypeTok{chr =} \StringTok{"CHR"}\NormalTok{, }\DataTypeTok{bp =} \StringTok{"pos"}\NormalTok{, }\DataTypeTok{p =} \StringTok{"pvalue"}\NormalTok{, }\DataTypeTok{snp =} \StringTok{"Name"}\NormalTok{,}
+          \DataTypeTok{genomewideline=}\OperatorTok{-}\KeywordTok{log10}\NormalTok{(}\FloatTok{0.05}\OperatorTok{/}\NormalTok{ntest),}
+          \DataTypeTok{suggestiveline=}\OperatorTok{-}\KeywordTok{log10}\NormalTok{(}\KeywordTok{max}\NormalTok{(qThresh, }\FloatTok{0.05}\OperatorTok{/}\NormalTok{ntest)),}
+          \CommentTok{#col = myColors,cex.axis=0.8,}
+          \CommentTok{#col = myColors[c(1,16,8,12,19,5)],cex.axis=0.8,}
+          \DataTypeTok{col =} \KeywordTok{alpha}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"gray10"}\NormalTok{,}\StringTok{"deepskyblue1"}\NormalTok{,}\StringTok{"gray48"}\NormalTok{),}\FloatTok{0.55}\NormalTok{),}\DataTypeTok{cex.axis=}\FloatTok{0.80}\NormalTok{,}
+          \CommentTok{#col = myColors[c(1,16,8,12,19,5)]}
+          \DataTypeTok{ylim=}\KeywordTok{range}\NormalTok{(}\DecValTok{0}\NormalTok{,ymax),}\DataTypeTok{yaxt=}\StringTok{'n'}\NormalTok{, }\DataTypeTok{main =} \StringTok{'Manhattan plots, Basic EWAS for HS'}\NormalTok{)}
+\KeywordTok{axis}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DataTypeTok{cex=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Basic_EWAS_files/figure-latex/Manhattan Plots-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ whichsig =}\StringTok{ }\KeywordTok{unique}\NormalTok{(}\KeywordTok{which}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{FDR }\OperatorTok{<=}\StringTok{ }\FloatTok{0.05}\NormalTok{,}\DataTypeTok{arr.ind =}\NormalTok{ T)[,}\DecValTok{1}\NormalTok{])}
+ 
+ \ControlFlowTok{if}\NormalTok{(}\KeywordTok{length}\NormalTok{(whichsig) }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{)\{}
+\NormalTok{  intersect.cpgs =}\StringTok{ }\KeywordTok{unique}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{CpG[whichsig])}
+
+\NormalTok{  signif =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Name =}\NormalTok{ intersect.cpgs)}
+  
+\NormalTok{  indicator.mat =}\StringTok{ }\NormalTok{(HSres}\OperatorTok{$}\NormalTok{FDR[}\KeywordTok{match}\NormalTok{(intersect.cpgs,HSres}\OperatorTok{$}\NormalTok{CpG),] }\OperatorTok{<=}\StringTok{ }\FloatTok{0.05}\NormalTok{) }\OperatorTok{*}\StringTok{       }
+\StringTok{    }\KeywordTok{sign}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{coef[}\KeywordTok{match}\NormalTok{(intersect.cpgs,HSres}\OperatorTok{$}\NormalTok{CpG)])}
+
+\NormalTok{  signif =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(signif, indicator.mat)}
+  
+  
+\NormalTok{  annot =}\StringTok{ }\NormalTok{IlluminaAnnot.EPIC[ }\KeywordTok{match}\NormalTok{(intersect.cpgs, IlluminaAnnot.EPIC}\OperatorTok{$}\NormalTok{Name), ]}
+  
+\NormalTok{  signif =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(signif, annot[,}\OperatorTok{-}\DecValTok{1}\NormalTok{])}
+  
+\NormalTok{  signif}\OperatorTok{$}\NormalTok{CHR =}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{'chr'}\NormalTok{,}\StringTok{''}\NormalTok{,signif}\OperatorTok{$}\NormalTok{chr)}
+  
+\NormalTok{  SE.matrix =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(HSres[,}\KeywordTok{grep}\NormalTok{(}\StringTok{'se'}\NormalTok{,}\KeywordTok{names}\NormalTok{(HSres))])}
+  \KeywordTok{colnames}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{coeff) =}\StringTok{ 'coef.HS'}
+  \KeywordTok{colnames}\NormalTok{(SE.matrix) =}\StringTok{ 'SE.HS'}
+  \KeywordTok{colnames}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{pval) =}\StringTok{ 'pval.HS'}
+  \KeywordTok{colnames}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{FDR) =}\StringTok{ 'qval.HS'}
+  
+\NormalTok{  getinds =}\StringTok{ }\KeywordTok{match}\NormalTok{(signif}\OperatorTok{$}\NormalTok{Name,}\KeywordTok{rownames}\NormalTok{(HSres))}
+  
+\NormalTok{  signif =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(signif,HSres}\OperatorTok{$}\NormalTok{coeff[getinds,],HSres}\OperatorTok{$}\NormalTok{pval[getinds,],}
+\NormalTok{                 HSres}\OperatorTok{$}\NormalTok{FDR[getinds,],SE.matrix[getinds,])}
+  
+  \KeywordTok{saveRDS}\NormalTok{(signif,}\StringTok{'Basic_EWAS_signif_results.RDS'}\NormalTok{)}
+  
+\NormalTok{  genehits =}\StringTok{ }\KeywordTok{list}\NormalTok{()}
+  
+\NormalTok{  j_ =}\StringTok{ }\DecValTok{1}
+  \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{pval)}\OperatorTok{+}\DecValTok{1}\NormalTok{))\{}
+    
+\NormalTok{    sigsub =}\StringTok{ }\NormalTok{signif[}\KeywordTok{which}\NormalTok{(signif[,j] }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{),]}
+    
+\NormalTok{    genes =}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(sigsub}\OperatorTok{$}\NormalTok{UCSC_RefGene_Name,}\StringTok{';'}\NormalTok{),unique)}
+\NormalTok{    genes[}\KeywordTok{sapply}\NormalTok{(genes,length)}\OperatorTok{==}\DecValTok{0}\NormalTok{] =}\StringTok{ '.'}
+    
+    \ControlFlowTok{if}\NormalTok{(}\KeywordTok{length}\NormalTok{(genes)}\OperatorTok{>}\DecValTok{0}\NormalTok{)\{}
+\NormalTok{      gene_reg =}\StringTok{ }\KeywordTok{do.call}\NormalTok{(rbind,}\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(genes), }\ControlFlowTok{function}\NormalTok{(i)\{}
+        \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{gene =}\NormalTok{ genes[[i]], }\DataTypeTok{ind =}\NormalTok{ i, }\DataTypeTok{Name =}\NormalTok{ sigsub}\OperatorTok{$}\NormalTok{Name[i])}
+\NormalTok{      \}))}
+      
+\NormalTok{      genehits[[j_]] =}\StringTok{ }\KeywordTok{tapply}\NormalTok{(gene_reg}\OperatorTok{$}\NormalTok{Name,gene_reg}\OperatorTok{$}\NormalTok{gene,}\ControlFlowTok{function}\NormalTok{(x) x)}
+      
+\NormalTok{    \}}\ControlFlowTok{else}\NormalTok{\{}
+\NormalTok{      genehits[[j_]] =}\StringTok{ }\KeywordTok{list}\NormalTok{()}
+\NormalTok{    \}}
+    \KeywordTok{names}\NormalTok{(genehits)[j_] =}\StringTok{ }\KeywordTok{names}\NormalTok{(signif)[j]}
+    
+\NormalTok{    j_ =}\StringTok{ }\NormalTok{j_ }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+\NormalTok{  \}}
+  
+\NormalTok{  ncols =}\StringTok{ }\KeywordTok{ncol}\NormalTok{(HSres}\OperatorTok{$}\NormalTok{pval)}
+  
+\NormalTok{  allgenes =}\StringTok{ }\KeywordTok{unique}\NormalTok{(}\KeywordTok{unlist}\NormalTok{(}\KeywordTok{lapply}\NormalTok{(genehits[}\DecValTok{1}\OperatorTok{:}\NormalTok{ncols],names)))}
+  
+\NormalTok{  genehits}\OperatorTok{$}\NormalTok{nHits =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DataTypeTok{nrow =} \KeywordTok{length}\NormalTok{(allgenes), }\DataTypeTok{ncol =}\NormalTok{ ncols)}
+  \KeywordTok{rownames}\NormalTok{(genehits}\OperatorTok{$}\NormalTok{nHits) =}\StringTok{ }\NormalTok{allgenes}
+  \KeywordTok{colnames}\NormalTok{(genehits}\OperatorTok{$}\NormalTok{nHits) =}\StringTok{ }\KeywordTok{names}\NormalTok{(genehits)[}\DecValTok{1}\OperatorTok{:}\NormalTok{ncols]}
+  
+  \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{ncols)\{}
+\NormalTok{    tab =}\StringTok{ }\KeywordTok{sapply}\NormalTok{(genehits[[j]],length)}
+    \ControlFlowTok{if}\NormalTok{(}\KeywordTok{length}\NormalTok{(tab) }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{)}
+\NormalTok{      genehits}\OperatorTok{$}\NormalTok{nHits[}\KeywordTok{names}\NormalTok{(tab),j] =}\StringTok{ }\NormalTok{tab}
+\NormalTok{  \}}
+  
+  \KeywordTok{saveRDS}\NormalTok{(genehits,}\StringTok{'Basic_EWAS_signif_gene_hits.RDS'}\NormalTok{)}
+  
+\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}

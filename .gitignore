@@ -6,3 +6,12 @@ Processed/detection_p.Rdata
 Processed/Sex_Estimate_Minfi.csv
 Processed/WB_FunNorm.Rdata
 Processed/WB_obj.Rdata
+.Rproj.user
+Processed/betas_raw_dnamage.Rdata
+Processed/DnaMAge/annot.csv
+Processed/DnaMAge/betas.csv
+Processed/DnaMAge/betas_raw.csv
+Processed/DnaMAge/dnamage_processed_betas.log.txt
+Processed/DnaMAge/dnamage_processed_betas.output.csv
+Processed/DnaMAge/dnamage_raw_betas_raw.log.txt
+Processed/DnaMAge/dnamage_raw_betas_raw.output.csv
