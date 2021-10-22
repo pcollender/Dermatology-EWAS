@@ -1,0 +1,316 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdftitle={DNAmAge Acceleration Analyses},
+            pdfauthor={Phil Collender},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{DNAmAge Acceleration Analyses}
+\author{Phil Collender}
+\date{October 22, 2021}
+
+\begin{document}
+\maketitle
+
+\subsection{Basic analysis of DNAMage results on Dermatology
+samples}\label{basic-analysis-of-dnamage-results-on-dermatology-samples}
+
+For the data processed with functional normalization, probe
+standardization, and ComBAT normalization
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{clockdat =}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{'Processed/DnaMAge/dnamage_processed_betas.output.csv'}\NormalTok{)}
+
+\CommentTok{#defining disease condition}
+\NormalTok{clockdat}\OperatorTok{$}\NormalTok{HS =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Normal'}\NormalTok{, }\StringTok{'HS'}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{'HS'}\NormalTok{, clockdat}\OperatorTok{$}\NormalTok{SampleID)) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Scatterplots of chronological age vs.~various
+clocks}\label{scatterplots-of-chronological-age-vs.various-clocks}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{todo =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'DNAmAge'}\NormalTok{,}\StringTok{'DNAmAgeHannum'}\NormalTok{,}\StringTok{'DNAmPhenoAge'}\NormalTok{,}\StringTok{'DNAmAgeSkinBloodClock'}\NormalTok{,}\StringTok{'DNAmGrimAge'}\NormalTok{,}\StringTok{'DNAmTL'}\NormalTok{)}
+\NormalTok{labels =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Horvath'}\NormalTok{, }\StringTok{'Hannum'}\NormalTok{, }\StringTok{'PhenoAge'}\NormalTok{, }\StringTok{'Skin & Blood'}\NormalTok{, }\StringTok{'GrimAge'}\NormalTok{, }\StringTok{'Telomere Length'}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(todo))\{}
+  
+\NormalTok{  pdat =}\StringTok{ }\NormalTok{clockdat[,}\KeywordTok{c}\NormalTok{(}\StringTok{'Age'}\NormalTok{,}\StringTok{'HS'}\NormalTok{,todo[i])]}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(pdat, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x =} \StringTok{'Age'}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ todo[i], }\DataTypeTok{col =} \StringTok{'HS'}\NormalTok{, }\DataTypeTok{fill =} \StringTok{'HS'}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{'lm'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{lty=}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =}\NormalTok{ labels[i], }\DataTypeTok{x =} \StringTok{'Chronological Age'}\NormalTok{))}
+
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Mage scatterplots-1.pdf}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Mage scatterplots-2.pdf}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Mage scatterplots-3.pdf}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Mage scatterplots-4.pdf}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Mage scatterplots-5.pdf}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Mage scatterplots-6.pdf}
+
+\subsection{Computing Pearson correlation and MAE of the
+clocks}\label{computing-pearson-correlation-and-mae-of-the-clocks}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Computing Pearson correlations}
+\NormalTok{##}
+\NormalTok{reslist =}\StringTok{ }\KeywordTok{lapply}\NormalTok{(todo, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{cor.test}\NormalTok{(clockdat}\OperatorTok{$}\NormalTok{Age,clockdat[,x]))}
+
+\NormalTok{###Plot}
+\NormalTok{pdat =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{clock =}\NormalTok{ todo, }\DataTypeTok{cor.est =} \KeywordTok{sapply}\NormalTok{(reslist,}\StringTok{'[['}\NormalTok{, }\StringTok{'estimate'}\NormalTok{), }
+                  \DataTypeTok{cor.lwr =} \KeywordTok{sapply}\NormalTok{(reslist,}\StringTok{'[['}\NormalTok{, }\StringTok{'conf.int'}\NormalTok{)[}\DecValTok{1}\NormalTok{,],}
+                  \DataTypeTok{cor.upr =} \KeywordTok{sapply}\NormalTok{(reslist,}\StringTok{'[['}\NormalTok{, }\StringTok{'conf.int'}\NormalTok{)[}\DecValTok{2}\NormalTok{,])}
+
+\KeywordTok{ggplot}\NormalTok{(pdat, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ clock, }\DataTypeTok{y =}\NormalTok{ cor.est, }\DataTypeTok{ymin =}\NormalTok{ cor.lwr, }\DataTypeTok{ymax =}\NormalTok{ cor.upr)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_errorbar}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{slope =} \DecValTok{0}\NormalTok{, }\DataTypeTok{intercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{'Pearson correlation'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{45}\NormalTok{, }\DataTypeTok{vjust =} \DecValTok{1}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Pearson corr-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Computing MAEs}
+\NormalTok{##}
+\NormalTok{pdat}\OperatorTok{$}\NormalTok{MedAE =}\StringTok{ }\KeywordTok{sapply}\NormalTok{(todo, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{median}\NormalTok{(}\KeywordTok{abs}\NormalTok{(clockdat}\OperatorTok{$}\NormalTok{Age }\OperatorTok{-}\StringTok{ }\NormalTok{clockdat[,x])))}
+
+\NormalTok{###Plot}
+\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{subset}\NormalTok{(pdat, clock }\OperatorTok{!=}\StringTok{ 'DNAmTL'}\NormalTok{), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ clock, }\DataTypeTok{y =}\NormalTok{ MedAE)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{slope =} \DecValTok{0}\NormalTok{, }\DataTypeTok{intercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{'Median Absolute Error'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{45}\NormalTok{, }\DataTypeTok{vjust =} \DecValTok{1}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Pearson corr-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{subset}\NormalTok{(pdat, clock }\OperatorTok{!=}\StringTok{ 'DNAmTL'}\NormalTok{), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ cor.est, }\DataTypeTok{y =}\NormalTok{ MedAE, }\DataTypeTok{col =}\NormalTok{ clock, }\DataTypeTok{shape =}\NormalTok{ clock)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{'Median Absolute Error'}\NormalTok{, }\DataTypeTok{x =} \StringTok{'Pearson correlation estimate'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{45}\NormalTok{, }\DataTypeTok{vjust =} \DecValTok{1}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\DataTypeTok{geom =} \StringTok{'point'}\NormalTok{, }\DataTypeTok{x =} \DecValTok{1}\NormalTok{, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/Pearson corr-3.pdf}
+
+\subsection{Visualize distribution of acceleration
+measures}\label{visualize-distribution-of-acceleration-measures}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{todo2 =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'AgeAccelerationResidual'}\NormalTok{,}
+        \StringTok{'AgeAccelerationResidualHannum'}\NormalTok{,}
+        \StringTok{'AgeAccelPheno'}\NormalTok{,}
+        \StringTok{'DNAmAgeSkinBloodClockAdjAge'}\NormalTok{,}\StringTok{'AgeAccelGrim'}\NormalTok{,}\StringTok{'DNAmTLAdjAge'}\NormalTok{,}
+        \StringTok{'IEAA'}\NormalTok{, }\StringTok{'EEAA'}\NormalTok{)}
+
+\NormalTok{labels2 =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Horvath accel'}\NormalTok{, }\StringTok{'Hannum accel'}\NormalTok{, }\StringTok{'Pheno accel'}\NormalTok{, }\StringTok{'Skin & Blood accel'}\NormalTok{, }
+            \StringTok{'Grim accel'}\NormalTok{, }\StringTok{'Telomeres Accel'}\NormalTok{, }\StringTok{'Intrinsic epigenetic age accel'}\NormalTok{,}
+            \StringTok{'Extrinsic epigenetic age accel'}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(todo2))\{}
+  
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(clockdat, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ todo2[i], }\DataTypeTok{col =} \StringTok{'HS'}\NormalTok{, }\DataTypeTok{fill =} \StringTok{'HS'}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_density}\NormalTok{(}\DataTypeTok{position =} \StringTok{'identity'}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =}\NormalTok{ labels2[i]))}
+
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-1.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-2.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-3.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-4.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-5.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-6.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-7.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel histograms-8.pdf}
+
+\subsection{Perform permutation tests for differences in mean
+acceleration between HS and normal
+skin}\label{perform-permutation-tests-for-differences-in-mean-acceleration-between-hs-and-normal-skin}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{permutation.test.2way <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(treatment, outcome, }\DataTypeTok{n =} \FloatTok{1e5}\NormalTok{)\{}
+\NormalTok{  original =}\StringTok{ }\KeywordTok{diff}\NormalTok{(}\KeywordTok{tapply}\NormalTok{(outcome, treatment, mean))}
+  
+\NormalTok{  ord =}\StringTok{ }\KeywordTok{order}\NormalTok{(treatment)}
+\NormalTok{  treatment =}\StringTok{ }\NormalTok{treatment[ord]}
+\NormalTok{  outcome =}\StringTok{ }\NormalTok{outcome[ord]}
+  
+\NormalTok{  spl.row =}\StringTok{ }\KeywordTok{min}\NormalTok{(}\KeywordTok{which}\NormalTok{(treatment }\OperatorTok{!=}\StringTok{ }\NormalTok{treatment[}\DecValTok{1}\NormalTok{]))}
+  
+\NormalTok{  perm.inds =}\StringTok{ }\KeywordTok{do.call}\NormalTok{(cbind, }\KeywordTok{replicate}\NormalTok{(n,}\KeywordTok{sample}\NormalTok{(}\KeywordTok{length}\NormalTok{(treatment)),}\DataTypeTok{simplify =}\NormalTok{ F))}
+  
+  \CommentTok{#split into two matrices}
+\NormalTok{  mat1 =}\StringTok{ }\NormalTok{perm.inds[}\DecValTok{1}\OperatorTok{:}\NormalTok{spl.row,]; mat1[] =}\StringTok{ }\NormalTok{outcome[mat1]}
+\NormalTok{  mat2 =}\StringTok{ }\NormalTok{perm.inds[(spl.row}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(perm.inds),]; mat2[] =}\StringTok{ }\NormalTok{outcome[mat2]}
+  
+\NormalTok{  distribution =}\StringTok{ }\KeywordTok{colMeans}\NormalTok{(mat2) }\OperatorTok{-}\StringTok{ }\KeywordTok{colMeans}\NormalTok{(mat1)}
+  
+\NormalTok{  result=}\KeywordTok{sum}\NormalTok{(}\KeywordTok{abs}\NormalTok{(distribution) }\OperatorTok{>=}\StringTok{ }\KeywordTok{abs}\NormalTok{(original))}\OperatorTok{/}\NormalTok{(n)}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{estimate =}\NormalTok{ original, }\DataTypeTok{pval =}\NormalTok{ result, }\DataTypeTok{distribution =}\NormalTok{ distribution))}
+\NormalTok{\}}
+
+\NormalTok{reslist =}\StringTok{ }\KeywordTok{lapply}\NormalTok{(todo2, }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{permutation.test.2way}\NormalTok{(}\DataTypeTok{treatment =}\NormalTok{ clockdat}\OperatorTok{$}\NormalTok{HS, }\DataTypeTok{outcome =}\NormalTok{ clockdat[,x]))}
+
+\KeywordTok{names}\NormalTok{(reslist) =}\StringTok{ }\NormalTok{labels2}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(todo2))\{}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{diff =} \OperatorTok{-}\NormalTok{reslist[[i]]}\OperatorTok{$}\NormalTok{distribution), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ diff)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{bins =} \DecValTok{100}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \OperatorTok{-}\NormalTok{reslist[[i]]}\OperatorTok{$}\NormalTok{estimate, }\DataTypeTok{col =}\StringTok{'red'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =} \KeywordTok{names}\NormalTok{(reslist)[i], }\DataTypeTok{subtitle =} \KeywordTok{paste0}\NormalTok{(}\StringTok{'Permutation p value: '}\NormalTok{, reslist[[i]]}\OperatorTok{$}\NormalTok{pval),}
+         \DataTypeTok{x =} \StringTok{'Difference in mean measure between HS and ordinary skin samples'}\NormalTok{))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-1.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-2.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-3.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-4.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-5.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-6.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-7.pdf}
+\includegraphics{DNAmAge-Acceleration-Analyses_files/figure-latex/accel test-8.pdf}
+
+\end{document}

@@ -1,0 +1,256 @@
+---
+title: "basic EWAS with Smart SVA controls"
+author: "Phil Collender"
+date: "October 22, 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Loading in required libraries
+
+```{r libraries and functions, message=FALSE, warning=FALSE}
+library(qvalue)
+library(EpiDISH)
+library(limma)
+library(qqman)
+library(IlluminaHumanMethylationEPICanno.ilm10b2.hg19)
+#library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
+library(scales)
+
+lambda <- function(p) median(qchisq(p, df=1, lower.tail=FALSE), na.rm=TRUE) / qchisq(0.5, df=1) 
+
+qqplot <- function(pvector, p0 = -8, col=c("#A0A0A0", "#000000"),showCI = T, ...) {
+  p_order <- order(pvector,decreasing=FALSE)
+  if (any(pvector == 0)) {
+    pvector[pvector == 0] <- .Machine$double.xmin
+  }
+  o <- -log10(pvector[p_order])
+  n <- length(o)
+  e <- -log10 (( 1:n - 0.5)/n )
+  b <- o >= p0;
+  
+  plot(e[!b],o[!b],pch=19,cex=0.7, ...,
+       xlab=expression(Expected~~-log[10](italic(p))),
+       ylab=expression(Observed~~-log[10](italic(p))),
+       xlim=c(0,e[1]), ylim=c(0,o[1]),col=col[1])
+  ## plot the 95% confidence interval (pointwise)
+  if(showCI){
+    ## the jth order statistic from a
+    ## uniform(0,1) sample
+    ## has a beta(j,n-j+1) distribution
+    ## (Casella & Berger, 2002,
+    ## 2nd edition, pg 230, Duxbury)
+    c97.5 <- qbeta(0.975,1:n,n-1:n+1)
+    c02.5 <- qbeta(0.025,1:n,n-1:n+1)
+    polygon(c(e, rev(e)), -log10(c(c97.5, rev(c02.5))), density=NA, col="gray90")
+  }
+  points(e[b],o[b],pch=19,cex=0.7,col=col[2])
+  abline(a=0,b=1,col=rgb(1,0.65,0),lty=1)
+}
+
+my.legend = function(...) {
+  opar <- par(fig=c(0,1,0,1), oma=c(0,0,0,0),
+              mar=c(0,0,0,0), new=TRUE)
+  on.exit(par(opar))
+  plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
+  legend(...)
+}
+
+```
+
+##Load data for results of 7 yr analysis
+
+```{r data load in, results=F, message=F, warning=F}
+load('results_files/basic_EWAS_limma_SmartSVA.RData')
+HSres = results
+
+rm(results); gc()
+```
+
+
+```{r qqplots and pvlaue histograms,fig.show='hold'}
+par(mfrow=c(1,1), mar = c(5,5,1,2), oma=c(0,0,0,0))
+layout(matrix(c(1,1,2),nrow=3))
+#Continuous
+
+pval.cols = grep('pval',colnames(HSres), value = T)
+
+for(col in pval.cols){
+  lambd=round(lambda(HSres[,col]),2)
+  qqplot(HSres[,col],main="QQ-plot, Basic EWAS for HS with SV Control")
+  legend("topleft",legend=eval(substitute( expression(paste(lambda,"=",lambd)),list(lambd=lambd))),bty="n")
+  hist(HSres[,col],main="P-value Histogram, Basic EWAS for HS",xlab="P-value",   
+  col="grey",breaks = 200)
+}
+
+```
+
+```{r volcano plots,fig.width=12, fig.height=8, dpi=300}
+colorGradient <- colorRampPalette(c("black","deepskyblue"), alpha=F)
+layout(1)
+
+pval.cols = grep('pval',colnames(HSres), value = T)
+coef.cols = grep('coef',colnames(HSres), value = T)
+
+pval.matrix = as.matrix(HSres[,pval.cols])
+coef.matrix = as.matrix(HSres[,coef.cols])
+
+qval = qvalue(pval.matrix)
+
+log.pvalues<--log10(pval.matrix)
+
+colors = colorGradient(30)[as.numeric(cut(log.pvalues,breaks = 30))]
+
+xrg=range(coef.matrix)
+yrg=range(log.pvalues)
+ntest=length(coef.matrix)
+
+qThresh = max(pval.matrix[qval$qvalues<=0.05])
+
+plot(coef.matrix[,1],log.pvalues[,1], col=alpha(colors[1:nrow(pval.matrix)],0.60),
+     xlim=xrg, ylim=yrg, pch=16,main="Volcano Plot, Basic EWAS for HS with SV Control",
+     xlab=expression("Reg. Coeff (M-value)"~(beta)), 
+     ylab=expression("-log"[10]~"(P-value)"))
+abline(h=-log10(0.05/ntest), lty=1, col="red", lwd=2)
+abline(h=-log10(qThresh), lty=2, col="orange", lwd=2)
+my.legend("bottomright", c("Bonferroni", "FDR"), lty=c(1,2),
+          lwd=c(2,2),col=c("red", "orange"),
+          horiz=FALSE, bty='n')
+
+```
+
+```{r Manhattan Plots, fig.width=12, fig.height=8, dpi=300}
+par(mfrow=c(1,1), mar = c(5,5,1,2), oma=c(0,0,0,0))
+
+data(IlluminaHumanMethylationEPICanno.ilm10b2.hg19)
+IlluminaAnnot.EPIC<-as.data.frame(getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b2.hg19))[,c("Name","UCSC_RefGene_Name","chr","pos","Relation_to_Island","DMR")]
+
+#' Match to your results
+IlluminaAnnot.EPIC_ = IlluminaAnnot.EPIC[match(HSres$CpG, IlluminaAnnot.EPIC$Name),]
+
+#' Get annotation for bonferroni and FDR-significant results
+pval.cols = grep('pval',colnames(HSres), value = T)
+coef.cols = grep('coef',colnames(HSres), value = T)
+
+pval.matrix = as.matrix(HSres[,pval.cols])
+coef.matrix = as.matrix(HSres[,coef.cols])
+
+qval = qvalue(pval.matrix)
+
+HSres$coeff = coef.matrix
+HSres$pval = pval.matrix
+HSres$FDR = qval$qvalues
+ntest=length(coef.matrix)
+
+qThresh = max(pval.matrix[qval$qvalues<=0.05])
+
+#' Only these elements are needed from annotation
+HSres$annot = IlluminaAnnot.EPIC_[,c("Name","chr","pos")]
+
+#Drop sex chromosome results
+keeps = which(!(HSres$annot$chr %in% c('chrX','chrY')))
+
+#'  CHR should be numeric
+HSres$annot$CHR = as.numeric(sub('.*chr', '',HSres$annot$chr))
+
+# Colors
+myColors = rainbow(22)
+names(myColors) = levels(1:22)
+ymax = max(-log10(HSres$pval))
+
+subdat = data.frame(pvalue = HSres$pval[,1], CHR = HSres$annot$CHR,
+                      pos = HSres$annot$pos, Name = HSres$annot$Name)
+
+manhattan(subdat[keeps,], chr = "CHR", bp = "pos", p = "pvalue", snp = "Name",
+          genomewideline=-log10(0.05/ntest),
+          suggestiveline=-log10(max(qThresh, 0.05/ntest)),
+          #col = myColors,cex.axis=0.8,
+          #col = myColors[c(1,16,8,12,19,5)],cex.axis=0.8,
+          col = alpha(c("gray10","deepskyblue1","gray48"),0.55),cex.axis=0.80,
+          #col = myColors[c(1,16,8,12,19,5)]
+          ylim=range(0,ymax),yaxt='n', main = 'Manhattan plots, Basic EWAS for HS with SV Control')
+axis(2,cex=1)
+
+```
+
+
+```{r saving significant results}
+ whichsig = unique(which(HSres$FDR <= 0.05,arr.ind = T)[,1])
+ 
+ if(length(whichsig) > 0){
+  intersect.cpgs = unique(HSres$CpG[whichsig])
+
+  signif = data.frame(Name = intersect.cpgs)
+  
+  indicator.mat = (HSres$FDR[match(intersect.cpgs,HSres$CpG),] <= 0.05) *       
+    sign(HSres$coef[match(intersect.cpgs,HSres$CpG)])
+
+  signif = cbind(signif, indicator.mat)
+  
+  
+  annot = IlluminaAnnot.EPIC[ match(intersect.cpgs, IlluminaAnnot.EPIC$Name), ]
+  
+  signif = cbind(signif, annot[,-1])
+  
+  signif$CHR = gsub('chr','',signif$chr)
+  
+  SE.matrix = as.matrix(HSres[,grep('se',names(HSres))])
+  colnames(HSres$coeff) = 'coef.HS'
+  colnames(SE.matrix) = 'SE.HS'
+  colnames(HSres$pval) = 'pval.HS'
+  colnames(HSres$FDR) = 'qval.HS'
+  
+  getinds = match(signif$Name,rownames(HSres))
+  
+  signif = cbind(signif,HSres$coeff[getinds,],HSres$pval[getinds,],
+                 HSres$FDR[getinds,],SE.matrix[getinds,])
+  
+  saveRDS(signif,'Basic_EWAS_signif_results_smartSVA.RDS')
+  
+  genehits = list()
+  
+  j_ = 1
+  for(j in c(1:ncol(HSres$pval)+1)){
+    
+    sigsub = signif[which(signif[,j] != 0),]
+    
+    genes = lapply(strsplit(sigsub$UCSC_RefGene_Name,';'),unique)
+    genes[sapply(genes,length)==0] = '.'
+    
+    if(length(genes)>0){
+      gene_reg = do.call(rbind,lapply(1:length(genes), function(i){
+        data.frame(gene = genes[[i]], ind = i, Name = sigsub$Name[i])
+      }))
+      
+      genehits[[j_]] = tapply(gene_reg$Name,gene_reg$gene,function(x) x)
+      
+    }else{
+      genehits[[j_]] = list()
+    }
+    names(genehits)[j_] = names(signif)[j]
+    
+    j_ = j_ + 1
+  }
+  
+  ncols = ncol(HSres$pval)
+  
+  allgenes = unique(unlist(lapply(genehits[1:ncols],names)))
+  
+  genehits$nHits = matrix(0,nrow = length(allgenes), ncol = ncols)
+  rownames(genehits$nHits) = allgenes
+  colnames(genehits$nHits) = names(genehits)[1:ncols]
+  
+  for(j in 1:ncols){
+    tab = sapply(genehits[[j]],length)
+    if(length(tab) > 0)
+      genehits$nHits[names(tab),j] = tab
+  }
+  
+  saveRDS(genehits,'Basic_EWAS_signif_gene_hits_smartSVA.RDS')
+  
+ }
+
+```

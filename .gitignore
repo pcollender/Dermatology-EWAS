@@ -15,3 +15,5 @@ Processed/DnaMAge/dnamage_processed_betas.log.txt
 Processed/DnaMAge/dnamage_processed_betas.output.csv
 Processed/DnaMAge/dnamage_raw_betas_raw.log.txt
 Processed/DnaMAge/dnamage_raw_betas_raw.output.csv
+EWAS/results_files/basic_EWAS_limma_SmartSVA.RData
+EWAS/results_files/basic_EWAS_limma_SmartSVA_absdiff.RData

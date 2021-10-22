@@ -1,0 +1,131 @@
+---
+title: "DNAmAge Acceleration Analyses"
+author: "Phil Collender"
+date: "October 22, 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+## Basic analysis of DNAMage results on Dermatology samples
+
+For the data processed with functional normalization, probe standardization, and ComBAT normalization
+
+```{r data load}
+clockdat = read.csv('Processed/DnaMAge/dnamage_processed_betas.output.csv')
+
+#defining disease condition
+clockdat$HS = c('Normal', 'HS')[as.numeric(grepl('HS', clockdat$SampleID)) + 1]
+```
+
+## Scatterplots of chronological age vs. various clocks
+
+```{r Mage scatterplots}
+todo = c('DNAmAge','DNAmAgeHannum','DNAmPhenoAge','DNAmAgeSkinBloodClock','DNAmGrimAge','DNAmTL')
+labels = c('Horvath', 'Hannum', 'PhenoAge', 'Skin & Blood', 'GrimAge', 'Telomere Length')
+
+for(i in 1:length(todo)){
+  
+  pdat = clockdat[,c('Age','HS',todo[i])]
+  print(ggplot(pdat, aes_string(x = 'Age', y = todo[i], col = 'HS', fill = 'HS')) + geom_point() + geom_smooth(method = 'lm') + 
+  geom_abline(lty=2) + labs(title = labels[i], x = 'Chronological Age'))
+
+}
+
+```
+
+## Computing Pearson correlation and MAE of the clocks
+
+```{r Pearson corr}
+# Computing Pearson correlations
+##
+reslist = lapply(todo, function(x) cor.test(clockdat$Age,clockdat[,x]))
+
+###Plot
+pdat = data.frame(clock = todo, cor.est = sapply(reslist,'[[', 'estimate'), 
+                  cor.lwr = sapply(reslist,'[[', 'conf.int')[1,],
+                  cor.upr = sapply(reslist,'[[', 'conf.int')[2,])
+
+ggplot(pdat, aes(x = clock, y = cor.est, ymin = cor.lwr, ymax = cor.upr)) + geom_point() + geom_errorbar() + 
+  geom_abline(slope = 0, intercept = 0) + labs(y = 'Pearson correlation') + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+# Computing MAEs
+##
+pdat$MedAE = sapply(todo, function(x) median(abs(clockdat$Age - clockdat[,x])))
+
+###Plot
+ggplot(subset(pdat, clock != 'DNAmTL'), aes(x = clock, y = MedAE)) + geom_point() +
+  geom_abline(slope = 0, intercept = 0) + labs(y = 'Median Absolute Error') + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+ggplot(subset(pdat, clock != 'DNAmTL'), aes(x = cor.est, y = MedAE, col = clock, shape = clock)) + geom_point() +
+  labs(y = 'Median Absolute Error', x = 'Pearson correlation estimate') + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + 
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 1) + 
+  annotate(geom = 'point', x = 1, y = 0, size = 2)
+
+
+```
+
+## Visualize distribution of acceleration measures 
+
+```{r accel histograms}
+todo2 = c('AgeAccelerationResidual',
+        'AgeAccelerationResidualHannum',
+        'AgeAccelPheno',
+        'DNAmAgeSkinBloodClockAdjAge','AgeAccelGrim','DNAmTLAdjAge',
+        'IEAA', 'EEAA')
+
+labels2 = c('Horvath accel', 'Hannum accel', 'Pheno accel', 'Skin & Blood accel', 
+            'Grim accel', 'Telomeres Accel', 'Intrinsic epigenetic age accel',
+            'Extrinsic epigenetic age accel')
+
+for(i in 1:length(todo2)){
+  
+  print(ggplot(clockdat, aes_string(x = todo2[i], col = 'HS', fill = 'HS')) + 
+  geom_density(position = 'identity', alpha = 0.5) +
+  labs(title = labels2[i]))
+
+}
+```
+
+## Perform permutation tests for differences in mean acceleration between HS and normal skin
+
+```{r accel test}
+permutation.test.2way <- function(treatment, outcome, n = 1e5){
+  original = diff(tapply(outcome, treatment, mean))
+  
+  ord = order(treatment)
+  treatment = treatment[ord]
+  outcome = outcome[ord]
+  
+  spl.row = min(which(treatment != treatment[1]))
+  
+  perm.inds = do.call(cbind, replicate(n,sample(length(treatment)),simplify = F))
+  
+  #split into two matrices
+  mat1 = perm.inds[1:spl.row,]; mat1[] = outcome[mat1]
+  mat2 = perm.inds[(spl.row+1):nrow(perm.inds),]; mat2[] = outcome[mat2]
+  
+  distribution = colMeans(mat2) - colMeans(mat1)
+  
+  result=sum(abs(distribution) >= abs(original))/(n)
+  return(list(estimate = original, pval = result, distribution = distribution))
+}
+
+reslist = lapply(todo2, function(x) permutation.test.2way(treatment = clockdat$HS, outcome = clockdat[,x]))
+
+names(reslist) = labels2
+
+for(i in 1:length(todo2)){
+  print(ggplot(data.frame(diff = -reslist[[i]]$distribution), aes(x = diff)) + 
+    geom_histogram(bins = 100) + geom_vline(xintercept = -reslist[[i]]$estimate, col ='red') + 
+    labs(title = names(reslist)[i], subtitle = paste0('Permutation p value: ', reslist[[i]]$pval),
+         x = 'Difference in mean measure between HS and ordinary skin samples'))
+}
+
+```
